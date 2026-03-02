@@ -1,24 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const INTERVIEW_API_URL = process.env.INTERVIEW_CHATBOT_API_URL;
-const INTERVIEW_API_KEY = process.env.INTERVIEW_CHATBOT_API_KEY;
+const PYTHON_API_URL = process.env.PYTHON_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
     const { question, answer, sessionId, difficulty } = await request.json();
 
-    if (!INTERVIEW_API_URL) {
+    if (!PYTHON_API_URL) {
       return NextResponse.json(
-        { error: 'Interview API URL not configured' },
+        { error: 'Python API URL not configured' },
         { status: 500 }
       );
     }
 
-    const response = await fetch(`${INTERVIEW_API_URL}/evaluate`, {
+    const response = await fetch(`${PYTHON_API_URL}/evaluate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(INTERVIEW_API_KEY && { 'Authorization': `Bearer ${INTERVIEW_API_KEY}` }),
       },
       body: JSON.stringify({
         question,

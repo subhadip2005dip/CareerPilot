@@ -405,7 +405,7 @@ export default function ResumeAnalyzerPage() {
     // recruiter → Python directly (no DB save needed for recruiter view)
     const endpoint = mode === "candidate"
       ? "/api/resume/analyze"
-      : `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/ats/recruiter`;
+      : `${process.env.NEXT_PUBLIC_PYTHON_API_URL || "http://localhost:8000"}/ats/recruiter`;
 
     try {
       const res = await fetch(endpoint, { method: "POST", body: form });

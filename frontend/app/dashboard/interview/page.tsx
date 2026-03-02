@@ -41,7 +41,7 @@ interface ChatMsg {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const API = process.env.NEXT_PUBLIC_RESUME_API_URL || "http://localhost:8000";
+const API = process.env.NEXT_PUBLIC_PYTHON_API_URL || "http://localhost:8000";
 
 const EXPERIENCE_OPTIONS = [
   "Entry Level (0-2 yrs)",
