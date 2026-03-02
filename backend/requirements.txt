@@ -1,18 +1,31 @@
-# Web framework
+streamlit 
+langchain 
+langchain-core 
+langchain-google-genai 
+langchain-community 
+google-generativeai 
+python-dotenv 
+pypdf 
+faiss-cpu 
+tiktoken
+numpy
+uvicorn
+
+# FastAPI
 fastapi
 uvicorn[standard]
 python-multipart
 
-# xAI / OpenAI-compatible SDK
-openai
-httpx
-
 # PDF
 pypdf
 
-# LangChain — text splitter only (no vectorstore, no embeddings needed)
+# Gemini — new SDK only (no google-generativeai)
+google-genai
+
+# LangChain — only text splitter needed now (no vectorstore/embeddings)
 langchain-core
 langchain-text-splitters
+langchain_chroma
 
 # Env
 python-dotenv
