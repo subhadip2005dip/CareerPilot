@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const PYTHON_API_URL = process.env.PYTHON_API_URL;
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const sessionId = searchParams.get('sessionId');
-    const category = searchParams.get('category');
+    const { role, experience, focus } = await request.json();
 
     if (!PYTHON_API_URL) {
       return NextResponse.json(
@@ -15,11 +13,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const response = await fetch(`${PYTHON_API_URL}/questions`, {
-      method: 'GET',
+    const response = await fetch(`${PYTHON_API_URL}/interview/questions`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ role, experience, focus }),
     });
 
     if (!response.ok) {
