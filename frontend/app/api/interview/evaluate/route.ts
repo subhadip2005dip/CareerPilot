@@ -25,16 +25,39 @@ export async function POST(request: NextRequest) {
       }),
     });
 
-    let data;
+    // Read response body once
+    let text = '';
     try {
-      data = await response.json();
+      text = await response.text();
     } catch (e) {
-      console.error('Failed to parse response:', e);
-      throw new Error('Invalid response from Python backend - is it running?');
+      console.error('Failed to read response:', e);
+      throw new Error('Failed to read backend response');
     }
 
+    // Check if response is ok
     if (!response.ok) {
-      throw new Error(data.detail || data.error || `API error: ${response.statusText}`);
+      console.error('Backend error response:', { status: response.status, text: text.slice(0, 500) });
+      let errorMsg = `Backend returned ${response.status}`;
+      try {
+        const errorJson = JSON.parse(text);
+        errorMsg = errorJson.detail || errorJson.error || errorMsg;
+      } catch {
+        errorMsg = text.slice(0, 200) || errorMsg;
+      }
+      throw new Error(errorMsg);
+    }
+
+    // Parse JSON
+    if (!text) {
+      throw new Error('Empty response body from backend');
+    }
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error('JSON parse error:', e);
+      throw new Error('Backend returned invalid JSON');
     }
 
     return NextResponse.json(data);

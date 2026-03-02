@@ -21,9 +21,17 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({ role, experience, focus: focus || [] }),
     });
 
-    // Check if response is ok before parsing
+    // Read response body once
+    let text = '';
+    try {
+      text = await response.text();
+    } catch (e) {
+      console.error('Failed to read response:', e);
+      throw new Error('Failed to read backend response');
+    }
+
+    // Check if response is ok
     if (!response.ok) {
-      const text = await response.text();
       console.error('Backend error response:', { status: response.status, text: text.slice(0, 500) });
       let errorMsg = `Backend returned ${response.status}`;
       try {
@@ -35,13 +43,16 @@ export async function POST(request: NextRequest) {
       throw new Error(errorMsg);
     }
 
+    // Parse JSON
+    if (!text) {
+      throw new Error('Empty response body from backend');
+    }
+
     let data;
     try {
-      const text = await response.text();
-      if (!text) throw new Error('Empty response body');
       data = JSON.parse(text);
     } catch (e) {
-      console.error('JSON parse error:', e, 'Response was:', await response.clone().text());
+      console.error('JSON parse error:', e);
       throw new Error('Backend returned invalid JSON');
     }
 
