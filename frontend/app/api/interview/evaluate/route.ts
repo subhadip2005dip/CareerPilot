@@ -25,16 +25,17 @@ export async function POST(request: NextRequest) {
       }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error(`Interview API error: ${response.statusText}`);
+      throw new Error(data.detail || data.error || `API error: ${response.statusText}`);
     }
 
-    const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
     console.error('Interview evaluation error:', error);
     return NextResponse.json(
-      { error: 'Failed to evaluate answer' },
+      { error: error instanceof Error ? error.message : 'Failed to evaluate answer' },
       { status: 500 }
     );
   }

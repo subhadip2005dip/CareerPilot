@@ -22,20 +22,21 @@ export async function POST(request: NextRequest) {
         role,
         question,
         answer,
-        history,
+        history: history || [],
       }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error(`Interview API error: ${response.statusText}`);
+      throw new Error(data.detail || data.error || `API error: ${response.statusText}`);
     }
 
-    const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
     console.error('Interview chat error:', error);
     return NextResponse.json(
-      { error: 'Failed to get response from interview chatbot' },
+      { error: error instanceof Error ? error.message : 'Failed to get response from interview chatbot' },
       { status: 500 }
     );
   }

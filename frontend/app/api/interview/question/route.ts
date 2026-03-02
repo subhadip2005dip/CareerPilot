@@ -18,19 +18,20 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ role, experience, focus }),
+      body: JSON.stringify({ role, experience, focus: focus || [] }),
     });
 
+    const data = await response.json();
+    
     if (!response.ok) {
-      throw new Error(`Interview API error: ${response.statusText}`);
+      throw new Error(data.detail || data.error || `API error: ${response.statusText}`);
     }
 
-    const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
     console.error('Interview questions error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch interview questions' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch interview questions' },
       { status: 500 }
     );
   }
